@@ -41,7 +41,18 @@ class Board:
     def run(self):
         self.gui_init()
         
+        run = True
+        while run:
+            
+            self.clock.tick(self.fps)
+            
+            for event in pygame.event.get():
 
+                if event.type == pygame.QUIT:
+                    run = False
+
+
+        pygame.quit()
 
 
 
