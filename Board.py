@@ -1,4 +1,5 @@
 import pygame
+from Block import Block
 from settings import *
 
 class Board:
@@ -15,6 +16,10 @@ class Board:
         self.fps = FPS
         self.font = None
         self.clock = None
+        self.board = None
+        self.queenImg = None
+        self.nQueens = NQUEENS
+        self.size = 0
 
     def gui_init(self):
         
@@ -36,7 +41,30 @@ class Board:
         blitPos = (self.width - w) // 2, (self.y_off - h) // 2
         self.win.blit(title, blitPos)
 
+        self.board_init()
+
         pygame.display.update()
+
+    def board_init(self):
+        self.queenImg = pygame.image.load(QUEEN_IMGNAME)
+        
+        xOffset = (self.boardWidth % self.nQueens) // 2
+        yOffset = (self.boardHeight % self.nQueens) // 2
+
+        size = (self.boardWidth - xOffset) // self.nQueens
+        
+        print(size)
+
+        # self.board = list()
+        # for row in range(NQUEENS):
+        #     self.board.append(list())
+        #     for col in range(NQUEENS):
+        #         self.board[row].append(Block(row, col, size))
+
+        # self.queenImg = pygame.transform.scale(self.queenImg, (size // 2, size // 2))
+        
+
+
 
     def run(self):
         self.gui_init()
