@@ -14,11 +14,14 @@ class Board:
         self.boardWin = None
         self.fps = FPS
         self.font = None
+        self.clock = None
 
     def gui_init(self):
         
         pygame.init()
         pygame.font.init()
+
+        self.clock = pygame.time.Clock()
 
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("N-Queen")
@@ -35,6 +38,9 @@ class Board:
 
         pygame.display.update()
 
+    def run(self):
+        self.gui_init()
+        
 
 
 
