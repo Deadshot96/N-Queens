@@ -22,11 +22,18 @@ class Board:
 
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("N-Queen")
+        self.win.fill(MIDBLACK)
 
         boardRect = self.x_off, self.y_off, self.boardWidth, self.boardHeight
         self.boardWin = self.win.subsurface(boardRect)
 
         self.font = pygame.font.SysFont('comicsansms', 40, True)
+        title = self.font.render("N-Queens Backtracking", 1, GOLDENROD)
+        w, h = title.get_size()
+        blitPos = (self.width - w) // 2, (self.y_off - h) // 2
+        self.win.blit(title, blitPos)
+
+        pygame.display.update()
 
 
 
