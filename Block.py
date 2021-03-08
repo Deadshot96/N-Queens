@@ -4,12 +4,14 @@ from settings import *
 
 class Block:
 
-    def __init__(self, row, col, size):
+    def __init__(self, row: int, col: int, size: int, xOff: int, yOff: int):
         self.row = row
         self.col = col
         self.size = size
-        self.x = self.col * self.size
-        self.y = self.row * self.size
+        self.xOffset = xOff
+        self.yOffset = yOff
+        self.x = self.col * self.size + self.xOffset
+        self.y = self.row * self.size + self.yOffset
         self.color = COLORS[(0 if self.row % 2 == 0 else 1 + self.col) % 8]
         self.occupied = False
         self.queenImg = None
