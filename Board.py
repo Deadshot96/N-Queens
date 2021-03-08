@@ -17,7 +17,7 @@ class Board:
         self.fps = FPS
         self.font = None
         self.clock = None
-        self.board = list()
+        self.board = [[]]
         self.queenImg = None
         self.nQueens = 11
         self.size = 0
@@ -47,7 +47,7 @@ class Board:
         pygame.display.update()
 
     def board_init(self):
-        self.queenImg = pygame.image.load(QUEEN_IMGNAME)
+        self.queenImg = pygame.image.load(QUEEN_IMGNAME).convert_alpha()
         
         xOffset = (self.boardWidth % self.nQueens) // 2
         yOffset = (self.boardHeight % self.nQueens) // 2
@@ -71,6 +71,11 @@ class Board:
                 block.draw(self.boardWin)
 
         pygame.display.update()
+
+    def clear_board(self):
+        for row in self.board:
+            for block in row:
+                block.clear()
 
     def occupy_random(self):
         for row in self.board:
