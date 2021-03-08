@@ -1,5 +1,6 @@
 import pygame
 from Block import Block
+import random
 from settings import *
 
 class Board:
@@ -18,7 +19,7 @@ class Board:
         self.clock = None
         self.board = list()
         self.queenImg = None
-        self.nQueens = NQUEENS
+        self.nQueens = 12
         self.size = 0
 
     def gui_init(self):
@@ -64,25 +65,36 @@ class Board:
         self.queenImg = pygame.transform.scale(self.queenImg, (size // 2, size // 2))
     
     def draw_board(self):
+        self.boardWin.fill(MIDBLACK)
         for row in self.board:
             for block in row:
                 block.draw(self.boardWin)
 
         pygame.display.update()
 
+    def occupy_random(self):
+        for row in self.board:
+            for block in row:
+                if random.random() > 0.5:
+                    block.occupy(self.queenImg)
+
 
     def run(self):
         self.gui_init()
+        self.occupy_random()
         
         run = True
         while run:
             
             self.clock.tick(self.fps)
+            self.draw_board()
             
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
                     run = False
+
+            pygame.display.update()
         
         self.quit()
 
