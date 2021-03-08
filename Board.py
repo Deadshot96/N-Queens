@@ -31,7 +31,7 @@ class Board:
         self.boardWin = self.win.subsurface(boardRect)
 
         self.font = pygame.font.SysFont('comicsansms', 40, True)
-        title = self.font.render("N-Queens Backtracking", 1, GOLDENROD)
+        title = self.font.render("N-Queen Backtracking", 1, GOLDENROD)
         w, h = title.get_size()
         blitPos = (self.width - w) // 2, (self.y_off - h) // 2
         self.win.blit(title, blitPos)
