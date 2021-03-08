@@ -12,9 +12,12 @@ class Block:
         self.yOffset = yOff
         self.x = self.col * self.size + self.xOffset
         self.y = self.row * self.size + self.yOffset
-        self.color = COLORS[(0 if self.row % 2 == 0 else 1 + self.col) % 8]
+        self.color = None
         self.occupied = False
         self.queenImg = None
+
+        self.get_color()
+
 
     def draw(self, win: Surface):
         rect = (self.x, self.y, self.size, self.size)
@@ -36,3 +39,9 @@ class Block:
     def clear(self):
         self.occupied = False
         self.queenImg = None
+
+    def get_color(self):
+        if self.row % 2:
+            self.color = COLORS[self.col % 2]
+        else:
+            self.color = COLORS[(self.col + 1) % 2]
