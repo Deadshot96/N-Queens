@@ -50,8 +50,11 @@ class Board:
 
                 if event.type == pygame.QUIT:
                     run = False
+        
+        self.quit()
 
-
+    def quit(self):
+        pygame.font.quit()
         pygame.quit()
 
 
