@@ -16,7 +16,7 @@ class Board:
         self.fps = FPS
         self.font = None
         self.clock = None
-        self.board = None
+        self.board = list()
         self.queenImg = None
         self.nQueens = NQUEENS
         self.size = 0
@@ -53,17 +53,22 @@ class Board:
 
         size = (self.boardWidth - xOffset) // self.nQueens
         
-        print(size)
+        # print(size)
 
-        # self.board = list()
-        # for row in range(NQUEENS):
-        #     self.board.append(list())
-        #     for col in range(NQUEENS):
-        #         self.board[row].append(Block(row, col, size))
+        self.board = list()
+        for row in range(self.nQueens):
+            self.board.append(list())
+            for col in range(self.nQueens):
+                self.board[row].append(Block(row, col, size, xOffset, yOffset))
 
-        # self.queenImg = pygame.transform.scale(self.queenImg, (size // 2, size // 2))
-        
+        self.queenImg = pygame.transform.scale(self.queenImg, (size // 2, size // 2))
+    
+    def draw_board(self):
+        for row in self.board:
+            for block in row:
+                block.draw(self.boardWin)
 
+        pygame.display.update()
 
 
     def run(self):
