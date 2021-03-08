@@ -19,7 +19,7 @@ class Board:
         self.clock = None
         self.board = list()
         self.queenImg = None
-        self.nQueens = 12
+        self.nQueens = 11
         self.size = 0
 
     def gui_init(self):
@@ -93,6 +93,14 @@ class Board:
 
                 if event.type == pygame.QUIT:
                     run = False
+
+                if event.type == pygame.KEYDOWN:
+
+                    if event.key == pygame.K_SPACE:
+                        for row in self.board:
+                            for block in row:
+                                if block.isOccupied() and random.random() < 0.5:
+                                    block.clear()
 
             pygame.display.update()
         
