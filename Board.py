@@ -2,6 +2,7 @@ import pygame
 from Block import Block
 import random
 from settings import *
+from typing import Tuple
 
 class Board:
     
@@ -12,6 +13,8 @@ class Board:
         self.boardHeight = BOARD_HEIGHT
         self.x_off = X_OFFSET
         self.y_off = Y_OFFSET
+        self.x_bOffset = 0
+        self.y_bOffset = 0
         self.win = None
         self.boardWin = None
         self.fps = FPS
@@ -19,7 +22,7 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = 8
+        self.nQueens = 11
         self.size = 0
 
     def gui_init(self):
@@ -49,10 +52,10 @@ class Board:
     def board_init(self):
         self.queenImg = pygame.image.load(QUEEN_IMGNAME).convert_alpha()
         
-        xOffset = (self.boardWidth % self.nQueens) // 2
-        yOffset = (self.boardHeight % self.nQueens) // 2
+        self.x_bOffset = (self.boardWidth % self.nQueens) // 2
+        self.y_bOffset = (self.boardHeight % self.nQueens) // 2
 
-        size = (self.boardWidth - xOffset) // self.nQueens
+        self.size = (self.boardWidth - self.x_bOffset) // self.nQueens
         
         # print(size)
 
@@ -60,9 +63,9 @@ class Board:
         for row in range(self.nQueens):
             self.board.append(list())
             for col in range(self.nQueens):
-                self.board[row].append(Block(row, col, size, xOffset, yOffset))
+                self.board[row].append(Block(row, col, self.size, self.x_bOffset, self.y_bOffset))
 
-        queenImgSize = int(size * 0.7)
+        queenImgSize = int(self.size * 0.7)
         self.queenImg = pygame.transform.scale(self.queenImg, (queenImgSize, queenImgSize))
     
     def draw_board(self):
@@ -84,10 +87,19 @@ class Board:
                 if random.random() > 0.5:
                     block.occupy(self.queenImg)
 
+    def get_row_col(self, x: int, y: int) -> Tuple:
+        x -= (self.x_off + self.x_bOffset)
+        y -= (self.y_off + self.y_bOffset)
+
+        return y // self.size, x // self.size
+
+    def is_valid_pos(self, row: int, col: int) -> bool:
+        return row in range(0, self.nQueens) and col in range(self.nQueens)
+
 
     def run(self):
         self.gui_init()
-        self.occupy_random()
+        # self.occupy_random()
         
         run = True
         while run:
@@ -107,6 +119,14 @@ class Board:
                             for block in row:
                                 if block.isOccupied() and random.random() < 0.5:
                                     block.clear()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    x, y = pos
+                    row, col = self.get_row_col(x, y)
+
+                    if self.is_valid_pos(row, col):
+                        print(row, col, self.win.get_at(pos), sep = '\t')
 
             pygame.display.update()
         
