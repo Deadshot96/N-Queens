@@ -22,8 +22,11 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = 11
+        self.nQueens = 8
         self.size = 0
+
+        # Variables for board selection
+        self.selected_pos = None
 
     def gui_init(self):
         
@@ -94,7 +97,7 @@ class Board:
         return y // self.size, x // self.size
 
     def is_valid_pos(self, row: int, col: int) -> bool:
-        return row in range(0, self.nQueens) and col in range(self.nQueens)
+        return row in range(self.nQueens) and col in range(self.nQueens)
 
 
     def run(self):
@@ -120,6 +123,15 @@ class Board:
                                 if block.isOccupied() and random.random() < 0.5:
                                     block.clear()
 
+                    if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                        if self.selected_pos:
+                            self.selected_pos.occupy(self.queenImg)
+
+                    if event.key == pygame.K_ESCAPE:
+                        if self.selected_pos:
+                            self.selected_pos.clear()
+
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     x, y = pos
@@ -127,6 +139,17 @@ class Board:
 
                     if self.is_valid_pos(row, col):
                         print(row, col, self.win.get_at(pos), sep = '\t')
+
+                        if self.selected_pos:
+                            self.selected_pos.deselect()
+
+                        self.selected_pos = self.board[row][col]
+                        self.selected_pos.select()
+                
+                    else:
+                        if self.selected_pos:
+                            self.selected_pos.deselect()
+                            self.selected_pos = None
 
             pygame.display.update()
         
