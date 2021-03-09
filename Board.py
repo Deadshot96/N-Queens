@@ -6,7 +6,7 @@ from typing import Tuple
 
 class Board:
     
-    def __init__(self):
+    def __init__(self, nQueens: int):
         self.width = WIDTH
         self.height = HEIGHT
         self.boardWidth = BOARD_WIDTH
@@ -22,7 +22,7 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = 12
+        self.nQueens = nQueens
         self.size = 0
 
         # Variables for board selection
@@ -47,7 +47,7 @@ class Board:
         self.boardWin = self.win.subsurface(boardRect)
 
         self.font = pygame.font.SysFont('comicsansms', 40, True)
-        title = self.font.render("N-Queen Backtracking", 1, GOLDENROD)
+        title = self.font.render(f"{self.nQueens}-Queen Backtracking", 1, GOLDENROD)
         w, h = title.get_size()
         blitPos = (self.width - w) // 2, (self.y_off - h) // 2
         self.win.blit(title, blitPos)
@@ -135,16 +135,16 @@ class Board:
             if self.is_valid_queen_pos(row, col):
                 self.board[row][col].occupy(self.queenImg)
                 self.set_flags(row, col, True)
-                self.draw_board()
-                pygame.time.delay(100)
+                # self.draw_board()
+                # pygame.time.delay(100)
 
                 if self.solve_gui(col + 1):
                     return True
                 
                 self.board[row][col].clear()
                 self.set_flags(row, col, False)
-                self.draw_board()
-                pygame.time.delay(100)
+                # self.draw_board()
+                # pygame.time.delay(100)
 
 
         return False
@@ -214,5 +214,5 @@ class Board:
 
 
 if __name__ == "__main__":
-    X = Board()
+    X = Board(40)
     X.run()
