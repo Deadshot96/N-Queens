@@ -87,6 +87,7 @@ class Board:
         for row in self.board:
             for block in row:
                 block.clear()
+        self.flags_init()
 
     def occupy_random(self):
         for row in self.board:
@@ -114,13 +115,35 @@ class Board:
         ans = rowFlag or fSlashFlag or bSlashFlag
         return not ans
         
-    
     def flags_init(self):
         self.rowQueenFlags = [False] * self.nQueens
         self.fSlashQueenFlags = [False] * (2 * self.nQueens - 1)
         self.bSlashQueenFlags = [False] * (2 * self.nQueens - 1)  
         self.flagsInitiated = True
 
+    def set_flags(self, row: int, col: int, flag: bool):
+        self.rowQueenFlags[row] = flag
+        self.fSlashQueenFlags[row + col] = flag
+        self.bSlashQueenFlags[(self.nQueens - 1) - (row - col)] = flag
+
+    def solve_gui(self, col: int) -> bool:
+        if col == (self.nQueens - 1):
+            return True
+
+        for row in range(self.nQueens):
+            
+            if self.is_valid_queen_pos(row, col):
+                self.board[row][col].occupy()
+                self.set_flags(row, col, True)
+
+                if self.solve_gui(col + 1):
+                    return True
+                
+                self.board[row][col].clear()
+                self.set_flags(row, col, False)
+
+        return False
+        
     def run(self):
         self.gui_init()
         # self.occupy_random()
