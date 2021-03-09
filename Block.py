@@ -15,6 +15,7 @@ class Block:
         self.color = None
         self.occupied = False
         self.queenImg = None
+        self.selected = False
 
         self.get_color()
 
@@ -45,3 +46,12 @@ class Block:
             self.color = COLORS[self.col % 2]
         else:
             self.color = COLORS[(self.col + 1) % 2]
+
+    def select(self):
+        self.selected = True
+
+    def deselect(self):
+        self.selected = False
+
+    def is_selected(self) -> bool:
+        return self.selected
