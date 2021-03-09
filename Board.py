@@ -22,11 +22,15 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = 8
+        self.nQueens = 4
         self.size = 0
 
         # Variables for board selection
         self.selected_pos = None
+        self.rowQueenFlags = list()
+        self.fSlashQueenFlags = list()
+        self.bSlashQueenFlags = list()
+        self.flagsInitiated = False
 
     def gui_init(self):
         
@@ -99,6 +103,23 @@ class Board:
     def is_valid_pos(self, row: int, col: int) -> bool:
         return row in range(self.nQueens) and col in range(self.nQueens)
 
+    def is_valid_queen_pos(self, row: int, col: int) -> bool:
+        if not self.flagsInitiated:
+            self.flags_init()
+        
+        rowFlag = self.rowQueenFlags[row]
+        fSlashFlag = self.fSlashQueenFlags[row + col]
+        bSlashFlag = self.bSlashQueenFlags[((self.nQueens - 1) - (row - col))]
+
+        ans = rowFlag or fSlashFlag or bSlashFlag
+        return not ans
+        
+    
+    def flags_init(self):
+        self.rowQueenFlags = [False] * self.nQueens
+        self.fSlashQueenFlags = [False] * (2 * self.nQueens - 1)
+        self.bSlashQueenFlags = [False] * (2 * self.nQueens - 1)  
+        self.flagsInitiated = True
 
     def run(self):
         self.gui_init()
