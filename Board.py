@@ -19,7 +19,7 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = 11
+        self.nQueens = 8
         self.size = 0
 
     def gui_init(self):
@@ -62,7 +62,8 @@ class Board:
             for col in range(self.nQueens):
                 self.board[row].append(Block(row, col, size, xOffset, yOffset))
 
-        self.queenImg = pygame.transform.scale(self.queenImg, (size // 2, size // 2))
+        queenImgSize = int(size * 0.7)
+        self.queenImg = pygame.transform.scale(self.queenImg, (queenImgSize, queenImgSize))
     
     def draw_board(self):
         self.boardWin.fill(MIDBLACK)
