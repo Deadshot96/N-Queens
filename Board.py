@@ -22,7 +22,7 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = 4
+        self.nQueens = 12
         self.size = 0
 
         # Variables for board selection
@@ -127,23 +127,28 @@ class Board:
         self.bSlashQueenFlags[(self.nQueens - 1) - (row - col)] = flag
 
     def solve_gui(self, col: int) -> bool:
-        if col == (self.nQueens - 1):
+        if col == (self.nQueens):
             return True
 
         for row in range(self.nQueens):
             
             if self.is_valid_queen_pos(row, col):
-                self.board[row][col].occupy()
+                self.board[row][col].occupy(self.queenImg)
                 self.set_flags(row, col, True)
+                self.draw_board()
+                pygame.time.delay(100)
 
                 if self.solve_gui(col + 1):
                     return True
                 
                 self.board[row][col].clear()
                 self.set_flags(row, col, False)
+                self.draw_board()
+                pygame.time.delay(100)
+
 
         return False
-        
+
     def run(self):
         self.gui_init()
         # self.occupy_random()
@@ -162,10 +167,13 @@ class Board:
                 if event.type == pygame.KEYDOWN:
 
                     if event.key == pygame.K_SPACE:
-                        for row in self.board:
-                            for block in row:
-                                if block.isOccupied() and random.random() < 0.5:
-                                    block.clear()
+                        self.clear_board()
+                        self.solve_gui(0)
+                        self.draw_board()
+                        # for row in self.board:
+                        #     for block in row:
+                        #         if block.isOccupied() and random.random() < 0.5:
+                        #             block.clear()
 
                     if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
                         if self.selected_pos:
