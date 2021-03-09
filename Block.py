@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 from settings import *
-
+from typing import Tuple
 class Block:
 
     def __init__(self, row: int, col: int, size: int, xOff: int, yOff: int):
@@ -59,3 +59,6 @@ class Block:
 
     def is_selected(self) -> bool:
         return self.selected
+
+    def get_dims(self) -> Tuple[int]:
+        return self.row, self.col
