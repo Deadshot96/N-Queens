@@ -24,6 +24,10 @@ class Block:
         rect = (self.x, self.y, self.size, self.size)
         pygame.draw.rect(win, self.color, rect, 0)
 
+        if self.is_selected():
+            rect = (self.x, self.y, self.size - 1, self.size - 1)
+            pygame.draw.rect(win, SELECTED_COLOR, rect, 2)
+
         if self.isOccupied():
             w, h = self.queenImg.get_size()
             blitPos = self.x + (self.size - w) // 2, self.y + (self.size - h) // 2
