@@ -135,16 +135,16 @@ class Board:
             if self.is_valid_queen_pos(row, col):
                 self.board[row][col].occupy(self.queenImg)
                 self.set_flags(row, col, True)
-                # self.draw_board()
-                # pygame.time.delay(100)
+                self.draw_board()
+                pygame.time.delay(100)
 
                 if self.solve_gui(col + 1):
                     return True
                 
                 self.board[row][col].clear()
                 self.set_flags(row, col, False)
-                # self.draw_board()
-                # pygame.time.delay(100)
+                self.draw_board()
+                pygame.time.delay(100)
 
 
         return False
@@ -188,6 +188,7 @@ class Board:
                     pos = pygame.mouse.get_pos()
                     x, y = pos
                     row, col = self.get_row_col(x, y)
+                    print(x, y, self.win.get_at(pos), sep='\t')
 
                     if self.is_valid_pos(row, col):
                         print(row, col, self.win.get_at(pos), sep = '\t')
@@ -214,5 +215,5 @@ class Board:
 
 
 if __name__ == "__main__":
-    X = Board(40)
+    X = Board(8)
     X.run()
