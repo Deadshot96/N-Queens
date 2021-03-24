@@ -3,10 +3,11 @@ from Block import Block
 import random
 from settings import *
 from typing import Tuple
+from Button import Button
 
 class Board:
     
-    def __init__(self, nQueens: int):
+    def __init__(self):
         self.width = WIDTH
         self.height = HEIGHT
         self.boardWidth = BOARD_WIDTH
@@ -22,8 +23,9 @@ class Board:
         self.clock = None
         self.board = [[]]
         self.queenImg = None
-        self.nQueens = nQueens
+        self.nQueens = NQUEENS
         self.size = 0
+        self.pauseSolution = False
 
         # Variables for board selection
         self.selected_pos = None
@@ -31,6 +33,13 @@ class Board:
         self.fSlashQueenFlags = list()
         self.bSlashQueenFlags = list()
         self.flagsInitiated = False
+
+        # Button varibles
+        self.up_button = None
+        self.down_button = None
+        self.buttons = list()
+        self.button_p = None
+        self.button_up = None
 
     def gui_init(self):
         
@@ -47,25 +56,27 @@ class Board:
         self.boardWin = self.win.subsurface(boardRect)
 
         self.font = pygame.font.SysFont('comicsansms', 40, True)
-        title = self.font.render(f"{self.nQueens}-Queen Backtracking", 1, GOLDENROD)
-        w, h = title.get_size()
-        blitPos = (self.width - w) // 2, (self.y_off - h) // 2
-        self.win.blit(title, blitPos)
+        
+        self.button_p = pygame.image.load(BUTTON_PRESSED).convert_alpha()
+        self.button_up = pygame.image.load(BUTTON_UNPRESS).convert_alpha()
+
+        self.up_button = Button(627, 150, 'Up', self.button_p, self.button_up)
+        self.down_button = Button(620, 190, 'Down', self.button_p, self.button_up)
+
+        self.up_button.set_multipliers(2, 1.5)
+
+        self.buttons = [self.up_button, self.down_button]
 
         self.board_init()
-
         pygame.display.update()
 
     def board_init(self):
         self.queenImg = pygame.image.load(QUEEN_IMGNAME).convert_alpha()
-        
         self.x_bOffset = (self.boardWidth % self.nQueens) // 2
         self.y_bOffset = (self.boardHeight % self.nQueens) // 2
 
         self.size = (self.boardWidth - self.x_bOffset) // self.nQueens
         
-        # print(size)
-
         self.board = list()
         for row in range(self.nQueens):
             self.board.append(list())
@@ -75,12 +86,26 @@ class Board:
         queenImgSize = int(self.size * 0.7)
         self.queenImg = pygame.transform.scale(self.queenImg, (queenImgSize, queenImgSize))
     
+        
     def draw_board(self):
-        self.boardWin.fill(MIDBLACK)
+        # self.boardWin.fill(MIDBLACK)
         for row in self.board:
             for block in row:
                 block.draw(self.boardWin)
+        pygame.display.update()
 
+        
+    def draw(self):
+        self.win.fill(MIDBLACK)
+        title = self.font.render(f"{self.nQueens}-Queen Backtracking", 1, GOLDENROD)
+        w, h = title.get_size()
+        blitPos = (self.width - w) // 2, (self.y_off - h) // 2
+        self.win.blit(title, blitPos)
+
+        for button in self.buttons:
+            button.draw(self.win)
+
+        self.draw_board()
         pygame.display.update()
 
     def clear_board(self):
@@ -138,6 +163,34 @@ class Board:
                 self.draw_board()
                 pygame.time.delay(100)
 
+                pos = pygame.mouse.get_pos()
+                x, y = pos
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.quit()
+                        return False
+
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for button in self.buttons:
+                            if button.in_button(pos):
+                                button.press()
+                                self.click_button(button)
+                                self.run()
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.run()
+
+                for button in self.buttons:
+                    if button.in_button(pos):
+                        button.hover()
+                    else:
+                        button.unhover()
+
+                for button in self.buttons:
+                    button.draw(self.win)
+
                 if self.solve_gui(col + 1):
                     return True
                 
@@ -146,19 +199,32 @@ class Board:
                 self.draw_board()
                 pygame.time.delay(100)
 
-
         return False
+
+    def click_button(self, button: Button):
+        label = button.get_label().lower()
+
+        if label.startswith('up'):
+            self.nQueens = min(self.nQueens + 1, 14)
+        elif label.startswith('down'):
+            self.nQueens = max(self.nQueens - 1, 4)
+            
+        self.clear_board()
+        self.board_init()
+            
+
 
     def run(self):
         self.gui_init()
-        # self.occupy_random()
         
         run = True
         while run:
             
             self.clock.tick(self.fps)
-            self.draw_board()
-            
+            self.draw()
+            pos = pygame.mouse.get_pos()
+            x, y = pos
+
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
@@ -185,8 +251,7 @@ class Board:
 
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
-                    x, y = pos
+                    
                     row, col = self.get_row_col(x, y)
                     print(x, y, self.win.get_at(pos), sep='\t')
 
@@ -204,6 +269,23 @@ class Board:
                             self.selected_pos.deselect()
                             self.selected_pos = None
 
+                    for button in self.buttons:
+                        if button.in_button(pos):
+                            button.press()
+                            self.click_button(button)
+
+                if event.type == pygame.MOUSEBUTTONUP:                    
+                    for button in self.buttons:
+                        if button.is_pressed():
+                            button.unpress()
+
+
+            for button in self.buttons:
+                if button.in_button(pos):
+                    button.hover()
+                else:
+                    button.unhover()
+
             pygame.display.update()
         
         self.quit()
@@ -215,5 +297,5 @@ class Board:
 
 
 if __name__ == "__main__":
-    X = Board(8)
+    X = Board()
     X.run()
