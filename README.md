@@ -5,4 +5,7 @@
     - pygame
     - nothing else. :)
 
+## KEYS:
+### ESCAPE => Clear board piece or Stop Solve Loop
+### SPACE => Solve board
 
