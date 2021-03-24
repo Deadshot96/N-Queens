@@ -1,6 +1,5 @@
 import pygame
 from pygame import Surface
-from colors import *
 from settings import *
 from typing import Tuple
 
@@ -42,7 +41,7 @@ class Button:
         self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (self.width, self.height))
         self.button_unpress_img = pygame.transform.scale(self.button_unpress_img, (self.width, self.height))
 
-        self.buttonRect = pygame.Rect(self.x + X_OFF, self.y + Y_OFF, self.width, self.height)
+        self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
 
 
     def draw(self, win: Surface):
