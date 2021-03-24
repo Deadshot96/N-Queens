@@ -6,6 +6,8 @@
     nothing else. :)
 
 ## KEYS:
-### ESCAPE => Clear board piece or Stop Solve Loop
-### SPACE => Solve board
+#### ESCAPE => Clear board piece or Stop Solve Loop
+#### SPACE => Solve board
+
+## Run Board.py and have fun!!
 
